@@ -23,18 +23,23 @@ func sessionConfig(filename string) (cfg *SessionConfig, err error) {
 		}
 	}
 	var isNew bool
-	if st, err = os.Stat(filename); st.IsDir() || os.IsNotExist(err) {
-		isNew = true
-	}
 	var f *os.File
-	f, err = os.Open(filename)
+	st, err = os.Stat(filename)
+	if err == nil && st.IsDir() || os.IsNotExist(err) {
+		f, err = os.Create(filename)
+		isNew = true
+	} else {
+		f, err = os.Open(filename)
+	}
 	if err != nil {
 		return
 	}
 	defer closer(f, &err)
 	if isNew {
-		cfg.HashKey = securecookie.GenerateRandomKey(64)
-		cfg.BlockKey = securecookie.GenerateRandomKey(32)
+		cfg = &SessionConfig{
+			HashKey:  securecookie.GenerateRandomKey(64),
+			BlockKey: securecookie.GenerateRandomKey(32),
+		}
 		err = gob.NewEncoder(f).Encode(cfg)
 	} else {
 		err = gob.NewDecoder(f).Decode(cfg)
