@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 
@@ -12,7 +13,11 @@ const (
 )
 
 func main() {
-	new().Run(os.Args)
+	app := new()
+	if err := app.Run(os.Args); err != nil {
+		fmt.Fprintf(cli.ErrWriter, "error: %v", err)
+		os.Exit(1)
+	}
 }
 
 func new() *cli.App {
