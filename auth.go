@@ -43,6 +43,7 @@ func auth(cc *cli.Context) error {
 	if clientID == "" {
 		return fmt.Errorf("set clientID in %s", envName)
 	}
+	gin.SetMode(gin.ReleaseMode)
 	r := gin.New()
 	sessionCfg, err := sessionConfig(cc.String("session-config"))
 	if err != nil {
