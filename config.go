@@ -66,6 +66,7 @@ func loadConfig(filename string) (cfg *Config, err error) {
 		return
 	}
 	defer closer(f, &err)
+	cfg = &Config{}
 	err = json.NewDecoder(f).Decode(cfg)
 	return
 }
