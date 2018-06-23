@@ -1,0 +1,19 @@
+<!doctype html>
+<title>IIJmio API 登録</title>
+<meta charset="UTF-8">
+<body>
+  <h1>解析中……</h1>
+  <div id="error"></div>
+  <form action="/auth" method="post" id="form">
+    <input type="hidden" name="params" id="params">
+  </form>
+  <script>
+    const params = location.hash.substring(1);
+    if (params.length === 0) {
+      document.getElementById('error').innerHTML = 'no params in hash';
+      return;
+    }
+    document.getElementById('params').value = params;
+    document.getElementById('form').submit();
+  </script>
+</body>
