@@ -26,6 +26,11 @@ func new() *cli.App {
 		Usage: "Checker for usage of IIJmio SIM",
 		Commands: []*cli.Command{
 			{
+				Name:   "init",
+				Usage:  "Remove config files",
+				Action: initialize,
+			},
+			{
 				Name:    "auth",
 				Aliases: []string{"a"},
 				Usage:   "Launch the server to auth IIJmio API",
@@ -57,4 +62,12 @@ func new() *cli.App {
 			},
 		},
 	}
+}
+
+func initialize(cc *cli.Context) error {
+	dir := filepath.Dir(cc.String("config"))
+	if st, err := os.Stat(dir); err == nil && st.IsDir() {
+		return os.RemoveAll(dir)
+	}
+	return nil
 }
