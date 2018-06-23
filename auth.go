@@ -18,7 +18,7 @@ import (
 const (
 	iijAPIURL = "https://api.iijmio.jp/mobile/d/v1/authorization/"
 	authURL   = "http://localhost:8080/auth"
-	envName   = "IIJMIO_CLIENTID"
+	envName   = "IIJMIO_DEVELOPERID"
 )
 
 type validResponse struct {
@@ -39,9 +39,9 @@ type errorResponse struct {
 }
 
 func auth(cc *cli.Context) error {
-	clientID := os.Getenv(envName)
-	if clientID == "" {
-		return fmt.Errorf("set clientID in %s", envName)
+	developerID := os.Getenv(envName)
+	if developerID == "" {
+		return fmt.Errorf("set developerID in %s", envName)
 	}
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.New()
@@ -57,7 +57,7 @@ func auth(cc *cli.Context) error {
 	))
 	r.SetHTMLTemplate(tmpl)
 	r.Use(sessions.Sessions(cc.App.Name, store))
-	r.GET("/", index(cc, &clientID))
+	r.GET("/", index(cc, &developerID))
 	r.GET("/auth", authGET(cc))
 	r.POST("/auth", authPOST(cc))
 	fmt.Println("Server initialization finished.  " +
@@ -66,7 +66,7 @@ func auth(cc *cli.Context) error {
 	return nil
 }
 
-func index(cc *cli.Context, clientID *string) gin.HandlerFunc {
+func index(cc *cli.Context, developerID *string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		s := sessions.Default(c)
 		state := uuid.Must(uuid.NewUUID()).String()
@@ -83,7 +83,7 @@ func index(cc *cli.Context, clientID *string) gin.HandlerFunc {
 			error500(c, err)
 			return
 		}
-		u, err := iijURL(clientID, &state)
+		u, err := iijURL(developerID, &state)
 		if err != nil {
 			error500(c, err)
 			return
@@ -153,14 +153,14 @@ func authPOST(cc *cli.Context) gin.HandlerFunc {
 	}
 }
 
-func iijURL(clientID, state *string) (*url.URL, error) {
+func iijURL(developerID, state *string) (*url.URL, error) {
 	u, err := url.Parse(iijAPIURL)
 	if err != nil {
 		return nil, err
 	}
 	v := u.Query()
 	v.Set("response_type", "token")
-	v.Set("client_id", *clientID)
+	v.Set("client_id", *developerID)
 	v.Set("redirect_uri", authURL)
 	v.Set("state", *state)
 	u.RawQuery = v.Encode()
