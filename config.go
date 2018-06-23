@@ -86,7 +86,7 @@ func saveConfig(
 		ExpiresIn: expiresIn.In(JST).Format(time.RFC3339),
 	}
 	var f *os.File
-	f, err = os.Open(filename)
+	f, err = os.Create(filename)
 	if err != nil {
 		return err
 	}
