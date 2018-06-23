@@ -77,6 +77,7 @@ func index(cc *cli.Context, clientID *string) gin.HandlerFunc {
 				s.AddFlash(fmt.Errorf("トークンが異常です: %v", err))
 			}
 		}
+		flashes := s.Flashes()
 		if err = s.Save(); err != nil {
 			error500(c, err)
 			return
@@ -88,7 +89,7 @@ func index(cc *cli.Context, clientID *string) gin.HandlerFunc {
 		}
 		c.HTML(http.StatusOK, "index.tmpl", gin.H{
 			"IIJURL":  u.String(),
-			"Flashes": s.Flashes(),
+			"Flashes": flashes,
 		})
 	}
 }
