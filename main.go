@@ -36,6 +36,9 @@ func new() *cli.App {
 			&cli.StringFlag{
 				Name:  "config",
 				Usage: "Filename for config",
+				Value: filepath.Join(
+					os.Getenv("HOME"), ".config", appName, "config.json",
+				),
 				DefaultText: filepath.Join(
 					os.Getenv("HOME"), ".config", appName, "config.json",
 				),
@@ -43,6 +46,9 @@ func new() *cli.App {
 			&cli.StringFlag{
 				Name:  "session-config",
 				Usage: "Filename for config of sessions in auth server",
+				Value: filepath.Join(
+					os.Getenv("HOME"), ".config", appName, "session-config.gob",
+				),
 				DefaultText: filepath.Join(
 					os.Getenv("HOME"), ".config", appName, "session-config.gob",
 				),
