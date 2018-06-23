@@ -127,6 +127,10 @@ func authPOST(cc *cli.Context) gin.HandlerFunc {
 			error400(c, err)
 			return
 		}
+		if p.TokenType != "Bearer" {
+			error400(c, errors.New("invalid token type"))
+			return
+		}
 		if p.State != state {
 			error400(c, errors.New("invalid state"))
 			return
