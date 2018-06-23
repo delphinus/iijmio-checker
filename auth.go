@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"html/template"
-	"log"
 	"net/http"
 	"net/url"
 
@@ -51,7 +50,7 @@ func auth(cc *cli.Context) error {
 	r.GET("/", index(cc))
 	r.GET("/auth", authGET(cc))
 	r.POST("/auth", authPOST(cc))
-	log.Println("Server initialization finished.  " +
+	fmt.Println("Server initialization finished.  " +
 		"Access http://localhost:8080 from your borwser")
 	r.Run(":8080")
 	return nil
