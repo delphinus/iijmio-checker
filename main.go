@@ -50,6 +50,12 @@ func new() *cli.App {
 					},
 				},
 			},
+			{
+				Name:    "cron",
+				Aliases: []string{"c"},
+				Usage:   "Cron job to check usage in IIJmio SIM",
+				Action:  cron,
+			},
 		},
 		Flags: []cli.Flag{
 			&cli.StringFlag{
