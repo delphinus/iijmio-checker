@@ -100,6 +100,7 @@ func authGET(cc *cli.Context) gin.HandlerFunc {
 }
 
 func authPOST(cc *cli.Context) gin.HandlerFunc {
+	out := cc.App.Writer
 	return func(c *gin.Context) {
 		s := sessions.Default(c)
 		state, ok := s.Get("state").(string)
@@ -146,6 +147,8 @@ func authPOST(cc *cli.Context) gin.HandlerFunc {
 			error500(c, err)
 			return
 		}
+		fmt.Fprint(out, "Config file successfully created.  "+
+			"Press Ctrl+C and launch `cron` subcommand.")
 		c.Redirect(http.StatusSeeOther, "/")
 	}
 }

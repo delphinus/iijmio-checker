@@ -15,15 +15,17 @@ const (
 func main() {
 	app := new()
 	if err := app.Run(os.Args); err != nil {
-		fmt.Fprintf(cli.ErrWriter, "error: %v", err)
+		fmt.Fprintf(app.ErrWriter, "error: %v", err)
 		os.Exit(1)
 	}
 }
 
 func new() *cli.App {
 	return &cli.App{
-		Name:  appName,
-		Usage: "Checker for usage of IIJmio SIM",
+		Name:      appName,
+		Usage:     "Checker for usage of IIJmio SIM",
+		Writer:    os.Stdout,
+		ErrWriter: os.Stderr,
 		Commands: []*cli.Command{
 			{
 				Name:   "init",
