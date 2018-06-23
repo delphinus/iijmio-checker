@@ -11,9 +11,9 @@
     const params = location.hash.substring(1);
     if (params.length === 0) {
       document.getElementById('error').innerHTML = 'no params in hash';
-      return;
+    } else {
+      document.getElementById('params').value = params;
+      document.getElementById('form').submit();
     }
-    document.getElementById('params').value = params;
-    document.getElementById('form').submit();
   </script>
 </body>
