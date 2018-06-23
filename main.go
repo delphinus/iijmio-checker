@@ -30,6 +30,18 @@ func new() *cli.App {
 				Aliases: []string{"a"},
 				Usage:   "Launch the server to auth IIJmio API",
 				Action:  auth,
+				Flags: []cli.Flag{
+					&cli.StringFlag{
+						Name:  "session-config",
+						Usage: "Filename for config of sessions in auth server",
+						Value: filepath.Join(
+							os.Getenv("HOME"), ".config", appName, "session-config.gob",
+						),
+						DefaultText: filepath.Join(
+							os.Getenv("HOME"), ".config", appName, "session-config.gob",
+						),
+					},
+				},
 			},
 		},
 		Flags: []cli.Flag{
@@ -41,16 +53,6 @@ func new() *cli.App {
 				),
 				DefaultText: filepath.Join(
 					os.Getenv("HOME"), ".config", appName, "config.json",
-				),
-			},
-			&cli.StringFlag{
-				Name:  "session-config",
-				Usage: "Filename for config of sessions in auth server",
-				Value: filepath.Join(
-					os.Getenv("HOME"), ".config", appName, "session-config.gob",
-				),
-				DefaultText: filepath.Join(
-					os.Getenv("HOME"), ".config", appName, "session-config.gob",
 				),
 			},
 		},
