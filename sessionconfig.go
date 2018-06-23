@@ -42,6 +42,7 @@ func sessionConfig(filename string) (cfg *SessionConfig, err error) {
 		}
 		err = gob.NewEncoder(f).Encode(cfg)
 	} else {
+		cfg = &SessionConfig{}
 		err = gob.NewDecoder(f).Decode(cfg)
 	}
 	return
