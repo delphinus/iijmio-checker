@@ -5,8 +5,8 @@
   <h1>IIJmio API 登録</h1>
   {{if len .Flashes}}
     <ul>
-      {{range _, f := .Flashes}}
-        <li>{{f}}</li>
+      {{range $i, $f := .Flashes}}
+        <li>{{$f}}</li>
       {{end}}
     </ul>
     <p><a href="/">もう一度登録する</a></p>
