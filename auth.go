@@ -22,6 +22,10 @@ const (
 )
 
 type validResponse struct {
+	Params string `form:"params" binding:"required"`
+}
+
+type validParams struct {
 	AccessToken string `form:"access_token" binding:"required"`
 	TokenType   string `form:"token_type" binding:"required"`
 	ExpiresIn   int    `form:"expires_in" binding:"required,min=1"`
@@ -116,11 +120,17 @@ func authPOST(cc *cli.Context) gin.HandlerFunc {
 			error400(c, err)
 			return
 		}
-		if f.State != state {
+		c.Request.URL.RawQuery = f.Params
+		var p validParams
+		if err := c.ShouldBindQuery(&p); err != nil {
+			error400(c, err)
+			return
+		}
+		if p.State != state {
 			error400(c, errors.New("invalid state"))
 			return
 		}
-		err := saveConfig(cc.String("config"), f.AccessToken, f.ExpiresIn)
+		err := saveConfig(cc.String("config"), p.AccessToken, p.ExpiresIn)
 		if err != nil {
 			error500(c, err)
 			return
