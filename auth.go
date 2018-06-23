@@ -147,7 +147,7 @@ func authPOST(cc *cli.Context) gin.HandlerFunc {
 			error500(c, err)
 			return
 		}
-		fmt.Fprint(out, "Config file successfully created.  "+
+		fmt.Fprintln(out, "Config file successfully created.  "+
 			"Press Ctrl+C and launch `cron` subcommand.")
 		c.Redirect(http.StatusSeeOther, "/")
 	}
