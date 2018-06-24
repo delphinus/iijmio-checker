@@ -4,9 +4,11 @@ import (
 	"errors"
 	"fmt"
 	"html/template"
+	"io/ioutil"
 	"net/http"
 	"net/url"
 	"os"
+	"strings"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
@@ -50,11 +52,10 @@ func auth(cc *cli.Context) error {
 		return err
 	}
 	store := cookie.NewStore(sessionCfg.HashKey, sessionCfg.BlockKey)
-	tmpl := template.Must(template.New("").ParseFiles(
-		"tmpl/index.tmpl",
-		"tmpl/auth.tmpl",
-		"tmpl/error.tmpl",
-	))
+	tmpl, err := loadTemplate()
+	if err != nil {
+		return err
+	}
 	r.SetHTMLTemplate(tmpl)
 	r.Use(sessions.Sessions(cc.App.Name, store))
 	r.GET("/", index(cc, &developerID))
@@ -151,6 +152,25 @@ func authPOST(cc *cli.Context) gin.HandlerFunc {
 			"Press Ctrl+C and launch `cron` subcommand.")
 		c.Redirect(http.StatusSeeOther, "/")
 	}
+}
+
+func loadTemplate() (t *template.Template, err error) {
+	t = template.New("")
+	for name, file := range Assets.Files {
+		if file.IsDir() || !strings.HasSuffix(name, ".tmpl") {
+			continue
+		}
+		var h []byte
+		h, err = ioutil.ReadAll(file)
+		if err != nil {
+			return
+		}
+		t, err = t.New(name).Parse(string(h))
+		if err != nil {
+			return
+		}
+	}
+	return
 }
 
 func iijURL(developerID, state *string) (*url.URL, error) {
