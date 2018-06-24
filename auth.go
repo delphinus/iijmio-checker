@@ -89,7 +89,7 @@ func index(cc *cli.Context, developerID *string) gin.HandlerFunc {
 			error500(c, err)
 			return
 		}
-		c.HTML(http.StatusOK, "index.tmpl", gin.H{
+		c.HTML(http.StatusOK, "index", gin.H{
 			"IIJURL":  u.String(),
 			"Flashes": flashes,
 		})
@@ -97,7 +97,7 @@ func index(cc *cli.Context, developerID *string) gin.HandlerFunc {
 }
 
 func authGET(cc *cli.Context) gin.HandlerFunc {
-	return func(c *gin.Context) { c.HTML(http.StatusOK, "auth.tmpl", nil) }
+	return func(c *gin.Context) { c.HTML(http.StatusOK, "auth", nil) }
 }
 
 func authPOST(cc *cli.Context) gin.HandlerFunc {
@@ -165,7 +165,9 @@ func loadTemplate() (t *template.Template, err error) {
 		if err != nil {
 			return
 		}
-		t, err = t.New(name).Parse(string(h))
+		tmplName := strings.TrimPrefix(name, "/tmpl/")
+		tmplName = strings.TrimSuffix(tmplName, ".tmpl")
+		t, err = t.New(tmplName).Parse(string(h))
 		if err != nil {
 			return
 		}
@@ -188,13 +190,13 @@ func iijURL(developerID, state *string) (*url.URL, error) {
 }
 
 func error500(c *gin.Context, err error) {
-	c.HTML(http.StatusInternalServerError, "error.tmpl", gin.H{
+	c.HTML(http.StatusInternalServerError, "error", gin.H{
 		"Error": err.Error(),
 	})
 }
 
 func error400(c *gin.Context, err error) {
-	c.HTML(http.StatusBadRequest, "error.tmpl", gin.H{
+	c.HTML(http.StatusBadRequest, "error", gin.H{
 		"Error": err.Error(),
 	})
 }
