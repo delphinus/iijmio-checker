@@ -6,5 +6,10 @@ help:
 .PHONY: build
 build: ## Build `iijmio-checker` binary
 	rm -f tmpl.go
+	go get github.com/gin-gonic/gin
+	go get github.com/gin-contrib/sessions
+	go get github.com/google/uuid
+	go get github.com/jessevdk/go-assets
+	go get gopkg.in/urfave/cli.v2
 	go-assets-builder tmpl > tmpl.go
 	go build -o iijmio-checker
